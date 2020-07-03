@@ -7,7 +7,7 @@ import Container from '@material-ui/core/Container';
 // import Header from './components/Header';
 import MainFeaturedPost from './components/MainFeaturedPost';
 import FeaturedPost from './components/FeaturedPost';
-import Main from './components/Main';
+//import Main from './components/Main';
 import Footer from './components/Footer';
 import Web3 from 'web3';
 import Content from './components/Content';
