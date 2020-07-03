@@ -220,7 +220,7 @@ class Blog extends React.Component{
           }}>
           Support Writer
         </Button>
-        <Button variant="outlined" size="small" onClick={()=>this.state(writer)?this.withdraw():window.alert('you are not a writer yet')}>Withdraw Earning</Button>
+        <Button variant="outlined" size="small" onClick={()=>this.state.writer?this.withdraw():window.alert('you are not a writer yet')}>Withdraw Earning</Button>
         <IconButton>
           <SearchIcon />
         </IconButton>
