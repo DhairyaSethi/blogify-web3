@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import Markdown from './Markdown';
+import ReactMarkdown from 'markdown-to-jsx';
 
 const useStyles = makeStyles((theme) => ({
   markdown: {
@@ -24,9 +25,12 @@ export default function Main(props) {
       </Typography>
       <Divider />
       {posts.map((post) => (
+        <div>
         <Markdown className={classes.markdown} key={post.substring(0, 40)}>
           {post}
         </Markdown>
+        <p>{post.substring(0, 40)} hello {post}</p>
+        </div>
       ))}
     </Grid>
   );

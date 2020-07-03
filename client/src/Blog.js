@@ -2,21 +2,55 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
-import Header from './components/Header';
+// import Header from './components/Header';
 import MainFeaturedPost from './components/MainFeaturedPost';
 import FeaturedPost from './components/FeaturedPost';
 import Main from './components/Main';
 import Footer from './components/Footer';
-import post1 from './components/blog-post.1.md';
 import Web3 from 'web3';
+import Content from './components/Content';
+import abi from './abis/abi.json';
+
+
+import Link from '@material-ui/core/Link';
+import IconButton from '@material-ui/core/IconButton';
+import SearchIcon from '@material-ui/icons/Search';
+import Toolbar from '@material-ui/core/Toolbar';
+// import PropTypes from 'prop-types';
+import Typography from '@material-ui/core/Typography';
+
 
 const styles = theme => ({
   mainGrid: {
     marginTop: theme.spacing(3),
   },
+// ------------
+toolbar: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+  toolbarTitle: {
+    flex: 1,
+  },
+  toolbarSecondary: {
+    justifyContent: 'space-between',
+    overflowX: 'auto',
+  },
+  toolbarLink: {
+    padding: theme.spacing(1),
+    flexShrink: 0,
+  },
+//-----------------
 });
-
+// Account : 87934.....
+// Not a writer yet || Content Creater
+// Be amoung __ writers today! || You're amoung __ writers
+const sections2 = [
+  { acc: 'Account : ', account: '', url: '#' },
+  { writer: 'Not a writer yet!', url: '#' },
+  { writerNo: 'Be amount 476 writers today!', url: '#' },
+];
 const sections = [
   { title: 'Technology', url: '#' },
   { title: 'Design', url: '#' },
@@ -58,7 +92,8 @@ const featuredPosts = [
   },
 ];
 
-const posts = [post1];
+
+
 
 class Blog extends React.Component{
   async componentWillMount() {
@@ -86,28 +121,74 @@ class Blog extends React.Component{
     this.setState({ account: accounts[0] });
 
     console.log("CURRENT ACCOUNT IS: " + this.state.account);
-    this .setState({ loading : false })
-/*
-    const networkId = await web3.eth.net.getId();
-    const networkData = Court.networks[networkId];
-    if (networkData) {
-      const court = new web3.eth.Contract(Court.abi, networkData.address);
-      this.setState({ court });
-      this.setState({ GAS: 500000, GAS_PRICE: "20000000000" });
-      // const func = await court.methods.func(params).call()
-      this.setState({ loading: false });
-    } else {
-      window.alert("Court contract not deployed to detected network.");
-    }*/
+    this.setState({ loading : false });
+    const contract = new web3.eth.Contract(abi, '0xA78F14d313279864B6A6b66C8711272Fb4A21988');
+    console.log('Connected to contract', contract);
+    await contract.methods.checkSub(this.state.account)
+      .call()
+      .then(res => {console.log('sub status =>',res); this.setState({ isSubscribed: res })})
+    this.setState({ contract });
+    this.setState({ GAS: 500000, GAS_PRICE: "20000000000" });
+    this.setState({ loading: false });
+    contract.methods.checkWriter(this.state.account)
+      .call()
+      .then(res => {console.log('WRiter', res); this.setState({writer: res})})
+    contract.methods.writerCount()
+      .call()
+      .then(res => {console.log(res, 'no of writers'); this.setState({writerCount: res})})
+    let dai = web3.utils.toHex(1e18); console.log('DAI Amount', dai)
+    this.setState({DAIAmount: dai});
+
   }
 
+  async subscribe() {
+    const {contract, GAS, GAS_PRICE, account} = this.state;
+    await contract.methods.subscribe(account)
+      .send({from: account, gas: GAS, gasPrice: GAS_PRICE})
+      .on('transactionHash', res => {console.log('SUBBEEEDD', res)})
+      .then(res => {console.log('SUBBEEEDD', res); this.setState({isSubscribed: true})})
+      
+    contract.methods.supplyDaiToCompound()
+      .send({from: account, gas: 800000, gasPrice: GAS_PRICE})
+      .then(res => {console.log('minted ', res);this.setState({minted:true})})
+      .error(err => console.log('TRANSACTION ERROR________',err))
+  }
 
+  async supportWriter(add) {
+    const {account, GAS, GAS_PRICE, contract } = this.state;
+    await contract.methods.makeWriter(add)
+      .send({from: account, gas: GAS, gasPrice: GAS_PRICE})
+      .then(res => {console.log('added writer ', res); this.setState({writerCount: this.state.writerCount + 1})})
+      .catch(err => console.log('couldnt support writer', err))
+  }
+
+  async withdraw() {
+    const {account, GAS, GAS_PRICE, contract, DAIAmount} = this.state;
+    await contract.methods.withdrawDaiFromCompound(account, DAIAmount)
+      .send({from: account, gas: GAS, gasPrice: GAS_PRICE})
+      .then(res => {console.log('withdrawn ==>', res); })
+      .catch(err => console.log('couldnt withdraw', err))
+  }
+
+  testing() {
+    const {account} = this.state;
+    window.alert('TRYYRYRY', account);
+  }
 
   constructor () {
     super();
     this.state = {
       account : "",
-      loading : true
+      loading : true,
+      GAS: "",
+      GAS_PRICE: "",
+      contract: "",
+      isSubscribed: false,
+      writer: false,
+      minted: false,
+      writerCount: 0,
+      DAIAmount: 0
+
     }
   }
 
@@ -118,8 +199,65 @@ class Blog extends React.Component{
     <React.Fragment>
       <CssBaseline />
       <Container maxWidth="lg">
-        <Header title="Blog" sections={sections} acc={this.state.account}/>
+        {/*<Header title="Blog" sections={sections} acc={this.state.account} testing={this.testing} />*/}
+{/*  START HEADER*/}        
+      <Toolbar className={classes.toolbar}>
+        <Button variant="outlined">Upload New Arcticle</Button>
+        <Typography
+          component="h2"
+          variant="h5"
+          color="inherit"
+          align="center"
+          noWrap
+          className={classes.toolbarTitle}
+        >
+          Blog
+        </Typography>
+        <Button variant="outlined" size="small" onClick={()=>{
+            let add = window.prompt('What is the address of the user?');
+            console.log('USER ADDED ==> ', add);
+            this.supportWriter(add)
+          }}>
+          Support Writer
+        </Button>
+        <Button variant="outlined" size="small" onClick={()=>this.withdraw()}>Withdraw Earning</Button>
+        <IconButton>
+          <SearchIcon />
+        </IconButton>
+      </Toolbar>
+      <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
+          <Link color="inherit" noWrap key={sections2.acc} href={'#'} variant="body2"  className={classes.toolbarLink}>
+            Account : {this.state.account.slice(0,7)}.... 
+          </Link>
+          <Link color="inherit" noWrap key={sections2.acc} href={'#'} variant="body2"  className={classes.toolbarLink}>
+            {this.state.minted?<p>Minted</p>:<p>Minting....</p>}
+          </Link>
+          <Link color="inherit" noWrap key={sections2.acc} href={'#'} variant="body2"  className={classes.toolbarLink}>
+            {this.state.writer? <p>Content Creater</p>: <p>Not a Writer Yet</p>}
+          </Link>
+          <Link color="inherit" noWrap key={sections2.acc} href={'#'} variant="body2"  className={classes.toolbarLink}>
+             Be amoung {this.state.writerCount} writers today!
+          </Link>
+      </Toolbar>
+      <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
+        {sections.map(section => (
+          <Link
+            color="inherit"
+            noWrap
+            key={section.title}
+            variant="body2"
+            href={section.url}
+            className={classes.toolbarLink}
+          >
+            {section.title} 
+          </Link>
+        ))
+        }
+      </Toolbar>
+{/* END HEADER */}        
         {this.state.loading ? <div align="center"><p>Loading ... </p></div> : 
+          !this.state.isSubscribed ? 
+          <div align="center">Please <Button variant='outlined' onClick={()=> this.subscribe()}>Subscribe</Button> :(</div> :
         <main>
           <MainFeaturedPost post={mainFeaturedPost} />
           <Grid container spacing={4}>
@@ -128,7 +266,8 @@ class Blog extends React.Component{
             ))}
           </Grid>
           <Grid container spacing={5} className={classes.mainGrid}>
-            <Main title="From the firehose" posts={posts} />
+            {/*<Main title="From the firehose" posts={posts} />*/}
+          <Content />
           </Grid>
         </main> }
       </Container>
