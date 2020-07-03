@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import Button from '@material-ui/core/Button';
+//import Button from '@material-ui/core/Button';
 
 
 const posts = [{
@@ -16,9 +16,6 @@ const posts = [{
 }]
 
 export default class Content extends Component {
-	constructor (props) {
-		super(props);
-	}
 
 
 	render() {
