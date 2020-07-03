@@ -8,7 +8,7 @@ import MainFeaturedPost from './components/MainFeaturedPost';
 import FeaturedPost from './components/FeaturedPost';
 import Main from './components/Main';
 import Footer from './components/Footer';
-import post1 from './components/blog-post1.md';
+import post1 from './components/blog-post.1.md';
 import Web3 from 'web3';
 
 const styles = theme => ({
@@ -86,6 +86,7 @@ class Blog extends React.Component{
     this.setState({ account: accounts[0] });
 
     console.log("CURRENT ACCOUNT IS: " + this.state.account);
+    this .setState({ loading : false })
 /*
     const networkId = await web3.eth.net.getId();
     const networkData = Court.networks[networkId];
@@ -105,7 +106,8 @@ class Blog extends React.Component{
   constructor () {
     super();
     this.state = {
-      account : ""
+      account : "",
+      loading : true
     }
   }
 
@@ -116,7 +118,8 @@ class Blog extends React.Component{
     <React.Fragment>
       <CssBaseline />
       <Container maxWidth="lg">
-        <Header title="Blog" sections={sections} />
+        <Header title="Blog" sections={sections} acc={this.state.account}/>
+        {this.state.loading ? <div align="center"><p>Loading ... </p></div> : 
         <main>
           <MainFeaturedPost post={mainFeaturedPost} />
           <Grid container spacing={4}>
@@ -127,7 +130,7 @@ class Blog extends React.Component{
           <Grid container spacing={5} className={classes.mainGrid}>
             <Main title="From the firehose" posts={posts} />
           </Grid>
-        </main>
+        </main> }
       </Container>
       <Footer title="Footer" description="Something here to give the footer a purpose!" />
     </React.Fragment>

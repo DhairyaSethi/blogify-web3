@@ -27,12 +27,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header(props) {
   const classes = useStyles();
-  const { sections, title } = props;
+  const { sections, title, acc } = props;
 
   return (
     <React.Fragment>
       <Toolbar className={classes.toolbar}>
-        <Button size="small">Subscribe</Button>
+        <Button variant="outlined" size="small">Upload New Arcticle</Button>
         <Typography
           component="h2"
           variant="h5"
@@ -43,15 +43,14 @@ export default function Header(props) {
         >
           {title}
         </Typography>
+        <Typography> Hello  </Typography>
+        <Button variant="outlined" size="small" onClick={()=>window.alert('Hey!')}>Check Current Earning</Button>
         <IconButton>
           <SearchIcon />
         </IconButton>
-        <Button variant="outlined" size="small">
-          Sign up
-        </Button>
       </Toolbar>
       <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
-        {sections.map((section) => (
+        {sections.map(section => (
           <Link
             color="inherit"
             noWrap
@@ -60,9 +59,10 @@ export default function Header(props) {
             href={section.url}
             className={classes.toolbarLink}
           >
-            {section.title}
+            {section.title} 
           </Link>
-        ))}
+        ))
+        }
       </Toolbar>
     </React.Fragment>
   );
