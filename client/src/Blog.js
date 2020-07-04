@@ -12,8 +12,6 @@ import Footer from './components/Footer';
 import Web3 from 'web3';
 import Content from './components/Content';
 import abi from './abis/abi.json';
-
-
 import Link from '@material-ui/core/Link';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
@@ -150,6 +148,7 @@ class Blog extends React.Component{
       
     contract.methods.supplyDaiToCompound()
       .send({from: account, gas: 800000, gasPrice: GAS_PRICE})
+      .on('transactionHash', res => {console.log('Supplied dai ', res)})
       .then(res => {console.log('minted ', res);this.setState({minted:true})})
       .error(err => console.log('TRANSACTION ERROR________',err))
   }
@@ -216,11 +215,13 @@ class Blog extends React.Component{
         <Button variant="outlined" size="small" onClick={()=>{
             let add = window.prompt('What is the address of the user?');
             console.log('USER ADDED ==> ', add);
-            this.supportWriter(add)
+            (add)?this.supportWriter(add):console.log('didn\'t show the love ', add)
           }}>
           Support Writer
         </Button>
-        <Button variant="outlined" size="small" onClick={()=>this.state.writer?this.withdraw():window.alert('you are not a writer yet')}>Withdraw Earning</Button>
+        <Button variant="outlined" size="small" onClick={() => {
+          this.state.writer?this.withdraw():window.alert('you are not a writer yet')}
+        }>Withdraw Earning</Button>
         <IconButton>
           <SearchIcon />
         </IconButton>
