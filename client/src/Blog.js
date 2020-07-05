@@ -24,14 +24,14 @@ const styles = theme => ({
   mainGrid: {
     marginTop: theme.spacing(3),
   },
-// ------------
-toolbar: {
+  toolbar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
   },
   toolbarTitle: {
     flex: 1,
   },
   toolbarSecondary: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
     justifyContent: 'space-between',
     overflowX: 'auto',
   },
@@ -39,7 +39,6 @@ toolbar: {
     padding: theme.spacing(1),
     flexShrink: 0,
   },
-//-----------------
 });
 
 class Blog extends React.Component{
@@ -198,10 +197,10 @@ class Blog extends React.Component{
             Account : {this.state.account.slice(0,7)}.... 
           </Link>
           <Link color="inherit" noWrap key='mint_status' href={'#'} variant="body2"  className={classes.toolbarLink}>
-            {this.state.minted?<p>Minted</p>:<p>Minting....</p>}
+            {this.state.minted?'Minted':'Minting....'}
           </Link>
           <Link color="inherit" noWrap key='creater_status' href={'#'} variant="body2"  className={classes.toolbarLink}>
-            {this.state.writer? <p>Content Creater</p>: <p>Not a Writer Yet</p>}
+            {this.state.writer? 'Content Creater': 'Not a Writer Yet'}
           </Link>
           <Link color="inherit" noWrap key='writer_count' href={'#'} variant="body2"  className={classes.toolbarLink}>
              Be among {this.state.writerCount} writers today!
