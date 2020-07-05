@@ -18,7 +18,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import Toolbar from '@material-ui/core/Toolbar';
 // import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-
+import axios from 'axios';
 
 const styles = theme => ({
   mainGrid: {
@@ -41,57 +41,6 @@ toolbar: {
   },
 //-----------------
 });
-// Account : 87934.....
-// Not a writer yet || Content Creater
-// Be amoung __ writers today! || You're amoung __ writers
-const sections2 = [
-  { acc: 'Account : ', account: '', url: '#' },
-  { writer: 'Not a writer yet!', url: '#' },
-  { writerNo: 'Be amount 476 writers today!', url: '#' },
-];
-const sections = [
-  { title: 'Technology', url: '#' },
-  { title: 'Design', url: '#' },
-  { title: 'Culture', url: '#' },
-  { title: 'Business', url: '#' },
-  { title: 'Politics', url: '#' },
-  { title: 'Opinion', url: '#' },
-  { title: 'Science', url: '#' },
-  { title: 'Health', url: '#' },
-  { title: 'Style', url: '#' },
-  { title: 'Travel', url: '#' },
-];
-
-const mainFeaturedPost = {
-  title: 'Title of a longer featured blog post',
-  description:
-    "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
-  image: 'https://source.unsplash.com/random',
-  imgText: 'main image description',
-  linkText: 'Continue reading…',
-};
-
-const featuredPosts = [
-  {
-    title: 'Featured post',
-    date: 'Nov 12',
-    description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
-    image: 'https://source.unsplash.com/random',
-    imageText: 'Image Text',
-  },
-  {
-    title: 'Post title',
-    date: 'Nov 11',
-    description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
-    image: 'https://source.unsplash.com/random',
-    imageText: 'Image Text',
-  },
-];
-
-
-
 
 class Blog extends React.Component{
   async componentWillMount() {
@@ -174,6 +123,21 @@ class Blog extends React.Component{
     window.alert('TRYYRYRY', account);
   }
 
+  async newArticle(title, content) {
+    const res = await axios.post(
+        'http://localhost:5000/posts',
+        {
+          title: title,
+          by: this.state.account,
+          content: content
+        },
+        {
+          headers: {'Content-Type': 'application/json'}
+        }
+      )
+    console.log('new article POST response ==> ', res)
+  }
+
   constructor () {
     super();
     this.state = {
@@ -187,7 +151,6 @@ class Blog extends React.Component{
       minted: false,
       writerCount: 0,
       DAIAmount: 0
-
     }
   }
 
@@ -201,7 +164,11 @@ class Blog extends React.Component{
         {/*<Header title="Blog" sections={sections} acc={this.state.account} testing={this.testing} />*/}
 {/*  START HEADER*/}        
       <Toolbar className={classes.toolbar}>
-        <Button variant="outlined">Upload New Arcticle</Button>
+        <Button variant="outlined" onClick={() => {
+          let t = window.prompt('Enter the title.');
+          let c = window.prompt('Enter the content.');
+          this.newArticle(t,c);
+        }}>Upload New Arcticle</Button>
         <Typography
           component="h2"
           variant="h5"
@@ -227,17 +194,17 @@ class Blog extends React.Component{
         </IconButton>
       </Toolbar>
       <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
-          <Link color="inherit" noWrap key={sections2.acc} href={'#'} variant="body2"  className={classes.toolbarLink}>
+          <Link color="inherit" noWrap key='account' href={'#'} variant="body2"  className={classes.toolbarLink}>
             Account : {this.state.account.slice(0,7)}.... 
           </Link>
-          <Link color="inherit" noWrap key={sections2.acc} href={'#'} variant="body2"  className={classes.toolbarLink}>
+          <Link color="inherit" noWrap key='mint_status' href={'#'} variant="body2"  className={classes.toolbarLink}>
             {this.state.minted?<p>Minted</p>:<p>Minting....</p>}
           </Link>
-          <Link color="inherit" noWrap key={sections2.acc} href={'#'} variant="body2"  className={classes.toolbarLink}>
+          <Link color="inherit" noWrap key='creater_status' href={'#'} variant="body2"  className={classes.toolbarLink}>
             {this.state.writer? <p>Content Creater</p>: <p>Not a Writer Yet</p>}
           </Link>
-          <Link color="inherit" noWrap key={sections2.acc} href={'#'} variant="body2"  className={classes.toolbarLink}>
-             Be amoung {this.state.writerCount} writers today!
+          <Link color="inherit" noWrap key='writer_count' href={'#'} variant="body2"  className={classes.toolbarLink}>
+             Be among {this.state.writerCount} writers today!
           </Link>
       </Toolbar>
       <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
@@ -279,3 +246,45 @@ class Blog extends React.Component{
 }
 
 export default withStyles(styles)(Blog);
+
+const sections = [
+  { title: 'Technology', url: '#' },
+  { title: 'Design', url: '#' },
+  { title: 'Culture', url: '#' },
+  { title: 'Business', url: '#' },
+  { title: 'Politics', url: '#' },
+  { title: 'Opinion', url: '#' },
+  { title: 'Science', url: '#' },
+  { title: 'Health', url: '#' },
+  { title: 'Style', url: '#' },
+  { title: 'Travel', url: '#' },
+];
+
+const mainFeaturedPost = {
+  title: 'Title of a longer featured blog post',
+  description:
+    "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
+  image: 'https://source.unsplash.com/random',
+  imgText: 'main image description',
+  linkText: 'Continue reading…',
+};
+
+const featuredPosts = [
+  {
+    title: 'Featured post',
+    date: 'Nov 12',
+    description:
+      'This is a wider card with supporting text below as a natural lead-in to additional content.',
+    image: 'https://source.unsplash.com/random',
+    imageText: 'Image Text',
+  },
+  {
+    title: 'Post title',
+    date: 'Nov 11',
+    description:
+      'This is a wider card with supporting text below as a natural lead-in to additional content.',
+    image: 'https://source.unsplash.com/random',
+    imageText: 'Image Text',
+  },
+];
+
