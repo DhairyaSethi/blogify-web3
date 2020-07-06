@@ -1,23 +1,21 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
-// import Header from './components/Header';
+import {
+  CssBaseline,
+  Grid,
+  Button,
+  Container,
+  Link,
+  IconButton,
+  Toolbar,
+  Typography } from '@material-ui/core/';
+import SearchIcon from '@material-ui/icons/Search';
 import MainFeaturedPost from './components/MainFeaturedPost';
 import FeaturedPost from './components/FeaturedPost';
-//import Main from './components/Main';
 import Footer from './components/Footer';
 import Web3 from 'web3';
 import Content from './components/Content';
 import abi from './abis/abi.json';
-import Link from '@material-ui/core/Link';
-import IconButton from '@material-ui/core/IconButton';
-import SearchIcon from '@material-ui/icons/Search';
-import Toolbar from '@material-ui/core/Toolbar';
-// import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 
 const styles = theme => ({
@@ -25,7 +23,7 @@ const styles = theme => ({
     marginTop: theme.spacing(3),
   },
   toolbar: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    borderBottom: `3px solid ${theme.palette.divider}`,
   },
   toolbarTitle: {
     flex: 1,
@@ -62,7 +60,6 @@ class Blog extends React.Component{
 
   async loadBlockchainData() {
     const web3 = window.web3;
-    // Load account
     const accounts = await web3.eth.getAccounts();
     this.setState({ account: accounts[0] });
 
@@ -117,11 +114,6 @@ class Blog extends React.Component{
       .catch(err => console.log('couldnt withdraw', err))
   }
 
-  testing() {
-    const {account} = this.state;
-    window.alert('TRYYRYRY', account);
-  }
-
   async newArticle(title, content) {
     const res = await axios.post(
         'http://localhost:5000/posts',
@@ -159,9 +151,7 @@ class Blog extends React.Component{
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container maxWidth="lg">
-        {/*<Header title="Blog" sections={sections} acc={this.state.account} testing={this.testing} />*/}
-{/*  START HEADER*/}        
+      <Container maxWidth="lg">       
       <Toolbar className={classes.toolbar}>
         <Button variant="outlined" onClick={() => {
           let t = window.prompt('Enter the title.');
@@ -220,8 +210,7 @@ class Blog extends React.Component{
           </Link>
         ))
         }
-      </Toolbar>
-{/* END HEADER */}        
+      </Toolbar>      
         {this.state.loading ? <div align="center"><p>Loading ... </p></div> : 
           !this.state.isSubscribed ? 
           <div align="center">Please <Button variant='outlined' onClick={()=> this.subscribe()}>Subscribe</Button> :(</div> :
@@ -233,8 +222,7 @@ class Blog extends React.Component{
             ))}
           </Grid>
           <Grid container spacing={5} className={classes.mainGrid}>
-            {/*<Main title="From the firehose" posts={posts} />*/}
-          <Content />
+           <Content />
           </Grid>
         </main> }
       </Container>
