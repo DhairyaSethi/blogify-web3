@@ -16,6 +16,7 @@ import Footer from './components/Footer';
 import Web3 from 'web3';
 import Content from './components/Content';
 import abi from './abis/abi.json';
+import DAI_abi from './abis/erc20abi.json';
 import axios from 'axios';
 
 const styles = theme => ({
@@ -72,7 +73,6 @@ class Blog extends React.Component{
       .then(res => {console.log('sub status =>',res); this.setState({ isSubscribed: res })})
     this.setState({ contract });
     this.setState({ GAS: 500000, GAS_PRICE: "20000000000" });
-    this.setState({ loading: false });
     contract.methods.checkWriter(this.state.account)
       .call()
       .then(res => {console.log('WRiter', res); this.setState({writer: res})})
@@ -82,13 +82,30 @@ class Blog extends React.Component{
     let dai = web3.utils.toHex(1e18); console.log('DAI Amount', dai)
     this.setState({DAIAmount: dai});
 
+    const daicontract = new web3.eth.Contract(DAI_abi, '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa')
+    await daicontract.methods.balanceOf(this.state.account)
+      .call()
+      .then(res => {
+        console.log('Dai balance ',web3.utils.fromWei(res, 'ether'))
+        if(web3.utils.fromWei(res, 'ether') < 1) {
+          window.alert('Insufficient Dai balance! Swap 0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa (DAI) token at uniswap.\n(Min 1)')
+          this.setState({daiBal: false})
+        }
+        else this.setState({daiBal: true})
+      })
+    this.setState({ loading: false });
+
+
   }
 
   async subscribe() {
+    if(!this.state.daiBal) {
+      window.alert('Insufficient Dai balance! Swap 0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa (DAI) at uniswap.\n You need atleast 1 DAI to subscribe.')
+      return;
+    }
     const {contract, GAS, GAS_PRICE, account} = this.state;
     await contract.methods.subscribe(account)
       .send({from: account, gas: GAS, gasPrice: GAS_PRICE})
-      .on('transactionHash', res => {console.log('SUBBEEEDD', res)})
       .then(res => {console.log('SUBBEEEDD', res); this.setState({isSubscribed: true})})
       
     contract.methods.supplyDaiToCompound()
@@ -141,7 +158,8 @@ class Blog extends React.Component{
       writer: false,
       minted: false,
       writerCount: 0,
-      DAIAmount: 0
+      DAIAmount: 0,
+      daiBal: false
     }
   }
 
@@ -211,7 +229,9 @@ class Blog extends React.Component{
         ))
         }
       </Toolbar>      
-        {this.state.loading ? <div align="center"><p>Loading ... </p></div> : 
+        {this.state.loading ? !this.state.daiBal ? 
+          <div align="center"><p>Insufficient Dai balance! Swap 0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa (DAI) at uniswap.</p></div> :
+          <div align="center"><p>Loading ... </p></div> : 
           !this.state.isSubscribed ? 
           <div align="center">Please <Button variant='outlined' onClick={()=> this.subscribe()}>Subscribe</Button> :(</div> :
         <main>
