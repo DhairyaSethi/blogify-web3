@@ -70,16 +70,25 @@ class Blog extends React.Component{
     console.log('Connected to contract', contract);
     await contract.methods.checkSub(this.state.account)
       .call()
-      .then(res => {console.log('sub status =>',res); this.setState({ isSubscribed: res })})
+      .then(res => {
+        console.log('sub status =>',res); 
+        this.setState({ isSubscribed: res })
+        this.state.isSubscribed?this.setState({minted: res}):console.log('.')
+      })
     this.setState({ contract });
     this.setState({ GAS: 500000, GAS_PRICE: "20000000000" });
     contract.methods.checkWriter(this.state.account)
       .call()
       .then(res => {console.log('WRiter', res); this.setState({writer: res})})
-    contract.methods.writerCount()
+    await contract.methods.writerCount()
       .call()
       .then(res => {console.log(res, 'no of writers'); this.setState({writerCount: res})})
-    let dai = web3.utils.toHex(1e18); console.log('DAI Amount', dai)
+      .catch(err => console.log('error is getting writerCount ', err ))
+
+//    let c = Math.floor((1/this.state.writerCount) * 100); 
+//    console.log('CCC', web3.utils.fromWei((c * 10 ** 16).toString(), 'ether'))
+    let d = ((Math.floor((1/this.state.writerCount) * 100)) * 10 ** 16).toString()
+    let dai = web3.utils.toHex(d); console.log('DAI Amount', dai, 'which is ', d)
     this.setState({DAIAmount: dai});
 
     const daicontract = new web3.eth.Contract(DAI_abi, '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa')
@@ -112,7 +121,7 @@ class Blog extends React.Component{
       .send({from: account, gas: 800000, gasPrice: GAS_PRICE})
       .on('transactionHash', res => {console.log('Supplied dai ', res)})
       .then(res => {console.log('minted ', res);this.setState({minted:true})})
-      .error(err => console.log('TRANSACTION ERROR________',err))
+      .catch(err => console.log('TRANSACTION ERROR________',err))
   }
 
   async supportWriter(add) {
@@ -132,6 +141,7 @@ class Blog extends React.Component{
   }
 
   async newArticle(title, content) {
+    if(!title || !content) return;
     const res = await axios.post(
         'http://localhost:5000/posts',
         {
