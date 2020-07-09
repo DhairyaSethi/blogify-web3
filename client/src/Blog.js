@@ -19,6 +19,7 @@ import Content from './components/Content';
 import abi from './abis/abi.json';
 import DAI_abi from './abis/erc20abi.json';
 import axios from 'axios';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 const styles = theme => ({
   mainGrid: {
@@ -162,6 +163,13 @@ class Blog extends React.Component{
   handleClose() {
     this.setState({ show: false })
   }
+
+  handleOpen1() {
+    this.setState({ show1: true })
+  }
+  handleClose1() {
+    this.setState({ show1: false })
+  }
   constructor () {
     super();
     this.state = {
@@ -177,6 +185,7 @@ class Blog extends React.Component{
       DAIAmount: 0,
       daiBal: false,
       show: false,
+      show1: false,
       content: "",
       title: ""
     }
@@ -190,33 +199,15 @@ class Blog extends React.Component{
       <CssBaseline />
       <Container maxWidth="lg">       
       <Toolbar className={classes.toolbar}>
+      <IconButton onClick={() => this.handleOpen1()}>
+          <InfoOutlinedIcon />
+      </IconButton>
         <Button variant="outlined" onClick={() => {
 //          let t = window.prompt('Enter the title.');
 //          let c = window.prompt('Enter the content.');
 //          this.newArticle(t,c);
             this.handleOpen();
         }}>Upload New Arcticle</Button>
-        <div id='form'>  
-        <Dialog open={this.state.show} onClose={this.handleClose} maxWidth='md' fullWidth aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Submit Article</DialogTitle>
-        <DialogContent>
-          <TextField autoFocus margin="dense" id="name" label="Title" fullWidth 
-          onChange={(e) => {e.preventDefault(); this.setState({title: e.target.value})}}
-          />
-          <TextField autoFocus margin="dense" id="name" label="Content" multiline rows={8} fullWidth
-          onChange={(e) => {e.preventDefault(); this.setState({content: e.target.value})}}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.handleClose()} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={() => {this.handleClose(); this.newArticle(this.state.title, this.state.content);}} color="primary">
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
-      </div>
         <Typography
           component="h2"
           variant="h5"
@@ -288,6 +279,46 @@ class Blog extends React.Component{
         </main> }
       </Container>
       <Footer title="Footer" description="Something here to give the footer a purpose!" />
+      <div id='form'>  
+        <Dialog open={this.state.show} onClose={this.handleClose} maxWidth='md' fullWidth aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Submit Article</DialogTitle>
+        <DialogContent>
+          <TextField autoFocus margin="dense" id="name" label="Title" fullWidth 
+          onChange={(e) => {e.preventDefault(); this.setState({title: e.target.value})}}
+          />
+          <TextField autoFocus margin="dense" id="name" label="Content" multiline rows={8} fullWidth
+          onChange={(e) => {e.preventDefault(); this.setState({content: e.target.value})}}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.handleClose()} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => {this.handleClose(); this.newArticle(this.state.title, this.state.content);}} color="primary">
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
+      </div>
+      <div id='info'>  
+        <Dialog open={this.state.show1} onClose={this.handleClose1} maxWidth='sm' fullWidth aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Information</DialogTitle>
+        <DialogContent>
+          <Typography>- Deployed at Rinkeby Testnet.</Typography>
+          <Typography>- Users are expected to deposite 1 DAI when they subscribe to the blog.</Typography>
+          <Typography>- If you don't have the time, just send some ETH to <strong>dai.inotime.eth</strong> and instantly recieve back some DAI! (0.01 ETH ~ 1 DAI)</Typography>
+          <Typography>- It uses UNISWAP V2 for the exachange.</Typography>
+          <Typography>- This is deposited at Compound to gain further interest.</Typography>
+          <Typography>- Anyone can post articles, and readers can support writers through the platform. After a user gets a certain number of likes (currently 1), they advance to the position of content creater.</Typography>
+          <Typography>- Profits each month are distributed proportionally among all Content Creaters.</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.handleClose1()} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+      </div>
     </React.Fragment>
   );
 }
