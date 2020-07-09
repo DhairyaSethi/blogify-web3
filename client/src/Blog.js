@@ -8,7 +8,8 @@ import {
   Link,
   IconButton,
   Toolbar,
-  Typography } from '@material-ui/core/';
+  Typography,
+  Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@material-ui/core/';
 import SearchIcon from '@material-ui/icons/Search';
 import MainFeaturedPost from './components/MainFeaturedPost';
 import FeaturedPost from './components/FeaturedPost';
@@ -155,7 +156,12 @@ class Blog extends React.Component{
       )
     console.log('new article POST response ==> ', res)
   }
-
+  handleOpen() {
+    this.setState({ show: true })
+  }
+  handleClose() {
+    this.setState({ show: false })
+  }
   constructor () {
     super();
     this.state = {
@@ -169,7 +175,10 @@ class Blog extends React.Component{
       minted: false,
       writerCount: 0,
       DAIAmount: 0,
-      daiBal: false
+      daiBal: false,
+      show: false,
+      content: "",
+      title: ""
     }
   }
 
@@ -182,10 +191,32 @@ class Blog extends React.Component{
       <Container maxWidth="lg">       
       <Toolbar className={classes.toolbar}>
         <Button variant="outlined" onClick={() => {
-          let t = window.prompt('Enter the title.');
-          let c = window.prompt('Enter the content.');
-          this.newArticle(t,c);
+//          let t = window.prompt('Enter the title.');
+//          let c = window.prompt('Enter the content.');
+//          this.newArticle(t,c);
+            this.handleOpen();
         }}>Upload New Arcticle</Button>
+        <div id='form'>  
+        <Dialog open={this.state.show} onClose={this.handleClose} maxWidth='md' fullWidth aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Submit Article</DialogTitle>
+        <DialogContent>
+          <TextField autoFocus margin="dense" id="name" label="Title" fullWidth 
+          onChange={(e) => {e.preventDefault(); this.setState({title: e.target.value})}}
+          />
+          <TextField autoFocus margin="dense" id="name" label="Content" multiline rows={8} fullWidth
+          onChange={(e) => {e.preventDefault(); this.setState({content: e.target.value})}}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.handleClose()} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => {this.handleClose(); this.newArticle(this.state.title, this.state.content);}} color="primary">
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
+      </div>
         <Typography
           component="h2"
           variant="h5"
