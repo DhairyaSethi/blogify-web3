@@ -20,6 +20,7 @@ import abi from './abis/abi.json';
 import DAI_abi from './abis/erc20abi.json';
 import axios from 'axios';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import { dbURL } from './Config'
 
 const styles = theme => ({
   mainGrid: {
@@ -87,10 +88,8 @@ class Blog extends React.Component{
       .then(res => {console.log(res, 'no of writers'); this.setState({writerCount: res})})
       .catch(err => console.log('error is getting writerCount ', err ))
 
-//    let c = Math.floor((1/this.state.writerCount) * 100); 
-//    console.log('CCC', web3.utils.fromWei((c * 10 ** 16).toString(), 'ether'))
     let d = ((Math.floor((1/this.state.writerCount) * 100)) * 10 ** 16).toString()
-    let dai = web3.utils.toHex(d); console.log('DAI Amount', dai, 'which is ', d)
+    let dai = web3.utils.toHex(d); console.log('DAI Amount', web3.utils.fromWei(d,'ether'), 'DAI')
     this.setState({DAIAmount: dai});
 
     const daicontract = new web3.eth.Contract(DAI_abi, '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa')
@@ -117,7 +116,7 @@ class Blog extends React.Component{
     const {contract, GAS, GAS_PRICE, account} = this.state;
     await contract.methods.subscribe(account)
       .send({from: account, gas: GAS, gasPrice: GAS_PRICE})
-      .then(res => {console.log('SUBBEEEDD', res); this.setState({isSubscribed: true})})
+      .then(res => {console.log('subbed!', res); this.setState({isSubscribed: true})})
       
     contract.methods.supplyDaiToCompound()
       .send({from: account, gas: 800000, gasPrice: GAS_PRICE})
@@ -145,7 +144,7 @@ class Blog extends React.Component{
   async newArticle(title, content) {
     if(!title || !content) return;
     const res = await axios.post(
-        'http://localhost:5000/posts',
+        dbURL,
         {
           title: title,
           by: this.state.account,
@@ -156,6 +155,10 @@ class Blog extends React.Component{
         }
       )
     console.log('new article POST response ==> ', res)
+    if(res.status === 200)
+      window.location.reload()
+    else 
+      console.log('Error posting article')
   }
   handleOpen() {
     this.setState({ show: true })
