@@ -2,11 +2,19 @@ import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
-import { dbURL } from '../Config'
+import { dbURL } from '../Config';
+import Loader from 'react-loader-spinner';
+
 let posts = []
 
 export default class Content extends Component {
 
+	constructor() {
+		super()
+		this.state = {
+			loading: true
+		}
+	}
 
 	async componentDidMount() {
 		await this.getData()
@@ -35,18 +43,20 @@ export default class Content extends Component {
 		const response = await axios.get(dbURL)
 		posts = response.data;
 		console.log('posts fetched ', posts)
+		this.setState({loading: false })
 	}
 
 
 	render() {
 		return (
 			<Container variant="h6" gutterBottom>
-			<Typography>More from the FireHouse</Typography>
-			{posts.map(post => {
+			<Typography>More from the FireHouse</Typography> <br />
+			{this.state.loading ? <div align='center'><Loader type="ThreeDots" color="#00BFFF" height={150} width={150} /></div>:
+			posts.map(post => {
 				return (
-					<div align='center'>
-			            <Typography variant='h3'> {post.title} </Typography>
-			            <Typography> By - {post.by} </Typography>
+					<div>
+			            <Typography variant='h3' align='center'> {post.title} </Typography>
+			            <Typography align='center'> By - {post.by} </Typography> <br />
 				        <Typography paragraph='true'> {post.content} </Typography>
 		        	</div>
 	        );

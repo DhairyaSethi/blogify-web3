@@ -3632,6 +3632,7 @@ __metadata:
     prop-types: ^15.7.2
     react: ^16.13.1
     react-dom: ^16.13.1
+    react-loader-spinner: ^3.1.14
     react-markdown: ^4.3.1
     react-scripts: 3.4.1
     web3: ^1.2.9
@@ -13009,6 +13010,20 @@ fsevents@^1.2.7:
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: 9659c004a370c15275784b1e848b735a7d403b5ba455e76b48d0840b05ee12bd79ef1dea520e7d70228367e0d95cc3cb894fbcbfda91c198b3339a96a0ecacc4
+  languageName: node
+  linkType: hard
+
+"react-loader-spinner@npm:^3.1.14":
+  version: 3.1.14
+  resolution: "react-loader-spinner@npm:3.1.14"
+  dependencies:
+    babel-runtime: ^6.26.0
+    prop-types: ^15.7.2
+  peerDependencies:
+    prop-types: ^15.7.2
+    react: ^16.8.6
+    react-dom: ^16.8.6
+  checksum: 69873a938b1be5025dda92bb3860fbc5d71a279601cd6eab3ccba6f2aabcd845bb8ce79232b2686d1fb1909c87462271b3b68ebe05314034ae2717916e2b2e6f
   languageName: node
   linkType: hard
 
