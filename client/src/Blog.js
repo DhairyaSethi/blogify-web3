@@ -308,7 +308,7 @@ class Blog extends React.Component{
         <Dialog open={this.state.show1} onClose={this.handleClose1} maxWidth='sm' fullWidth aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Information</DialogTitle>
         <DialogContent>
-          <Typography>- Deployed at Rinkeby Testnet.</Typography>
+          <Typography>- Deployed on Matic Network and Rinkeby Testnet.</Typography>
           <Typography>- Users are expected to deposite 1 DAI when they subscribe to the blog.</Typography>
           <Typography>- If you don't have the time, just send some ETH to <strong>dai.inotime.eth</strong> and instantly recieve back some DAI! (0.01 ETH ~ 1 DAI)</Typography>
           <Typography>- It uses UNISWAP V2 for the exachange.</Typography>
