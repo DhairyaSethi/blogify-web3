@@ -21,6 +21,7 @@ import DAI_abi from './abis/erc20abi.json';
 import axios from 'axios';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { dbURL } from './Config'
+import Loader from 'react-loader-spinner';
 
 const styles = theme => ({
   mainGrid: {
@@ -98,7 +99,7 @@ class Blog extends React.Component{
       .then(res => {
         console.log('Dai balance ',web3.utils.fromWei(res, 'ether'))
         if(web3.utils.fromWei(res, 'ether') < 1) {
-          window.alert('Insufficient Dai balance! Swap 0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa (DAI) token at uniswap.\n(Min 1)')
+          window.alert('Insufficient Dai balance! Swap 0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa (DAI) token at uniswap.(Min 1)\n OR just send some ETH to dai.inotime.eth to instantly recieve the right DAI token!')
           this.setState({daiBal: false})
         }
         else this.setState({daiBal: true})
@@ -110,7 +111,7 @@ class Blog extends React.Component{
 
   async subscribe() {
     if(!this.state.daiBal) {
-      window.alert('Insufficient Dai balance! Swap 0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa (DAI) at uniswap.\n You need atleast 1 DAI to subscribe.')
+      window.alert('Insufficient Dai balance! Swap 0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa (DAI) at uniswap.\n You need atleast 1 DAI to subscribe.\n OR just send some ETH to dai.inotime.eth to instantly recieve the right DAI token!')
       return;
     }
     const {contract, GAS, GAS_PRICE, account} = this.state;
@@ -265,10 +266,10 @@ class Blog extends React.Component{
         }
       </Toolbar>      
         {this.state.loading ? !this.state.daiBal ? 
-          <div align="center"><p>Insufficient Dai balance! Swap 0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa (DAI) at uniswap.</p></div> :
-          <div align="center"><p>Loading ... </p></div> : 
+          <div align="center"><p>Insufficient Dai balance! Swap 0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa (DAI) at uniswap. <br /> OR just send some ETH to <strong>dai.inotime.eth</strong> to instantly recieve the right DAI token!</p></div> :
+          <div align='center'><Loader type="ThreeDots" color="#00BFFF" height={150} width={150} /></div> : 
           !this.state.isSubscribed ? 
-          <div align="center">Please <Button variant='outlined' onClick={()=> this.subscribe()}>Subscribe</Button> :(</div> :
+          <div align="center"><br />Please <Button variant='outlined' onClick={()=> this.subscribe()}>Subscribe</Button> :(</div>  :
         <main>
           <MainFeaturedPost post={mainFeaturedPost} />
           <Grid container spacing={4}>
@@ -281,7 +282,7 @@ class Blog extends React.Component{
           </Grid>
         </main> }
       </Container>
-      <Footer title="Footer" description="Something here to give the footer a purpose!" />
+      <Footer />
       <div id='form'>  
         <Dialog open={this.state.show} onClose={this.handleClose} maxWidth='md' fullWidth aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Submit Article</DialogTitle>
