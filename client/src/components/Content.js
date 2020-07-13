@@ -4,6 +4,7 @@ import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import { dbURL } from '../Config';
 import Loader from 'react-loader-spinner';
+import { Link } from 'react-router-dom';
 
 let posts = []
 
@@ -57,7 +58,9 @@ export default class Content extends Component {
 					<div>
 			            <Typography variant='h3' align='center'> {post.title} </Typography>
 			            <Typography align='center'> By - {post.by} </Typography> <br />
-				        <Typography paragraph='true'> {post.content} </Typography>
+				        <Typography paragraph='true'> 
+				        	{post.content.slice(0, 970)}... <Link to={'post/' + post.id}>Continue Reading</Link>
+				        </Typography>
 		        	</div>
 	        );
 	    	})}

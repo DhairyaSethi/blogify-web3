@@ -2,7 +2,6 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {
   CssBaseline,
-  Grid,
   Button,
   Container,
   Link,
@@ -11,22 +10,19 @@ import {
   Typography,
   Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@material-ui/core/';
 import SearchIcon from '@material-ui/icons/Search';
-import MainFeaturedPost from './components/MainFeaturedPost';
-import FeaturedPost from './components/FeaturedPost';
 import Footer from './components/Footer';
 import Web3 from 'web3';
-import Content from './components/Content';
 import abi from './abis/abi.json';
 import DAI_abi from './abis/erc20abi.json';
 import axios from 'axios';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { dbURL } from './Config'
 import Loader from 'react-loader-spinner';
+import Main from './components/Main';
+import Post from './components/Post';
+import { Switch, Route, } from 'react-router-dom';
 
 const styles = theme => ({
-  mainGrid: {
-    marginTop: theme.spacing(3),
-  },
   toolbar: {
     borderBottom: `3px solid ${theme.palette.divider}`,
   },
@@ -105,8 +101,6 @@ class Blog extends React.Component{
         else this.setState({daiBal: true})
       })
     this.setState({ loading: false });
-
-
   }
 
   async subscribe() {
@@ -207,9 +201,6 @@ class Blog extends React.Component{
           <InfoOutlinedIcon />
       </IconButton>
         <Button variant="outlined" onClick={() => {
-//          let t = window.prompt('Enter the title.');
-//          let c = window.prompt('Enter the content.');
-//          this.newArticle(t,c);
             this.handleOpen();
         }}>Upload New Arcticle</Button>
         <Typography
@@ -250,37 +241,17 @@ class Blog extends React.Component{
              Be among {this.state.writerCount} writers today!
           </Link>
       </Toolbar>
-      <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
-        {sections.map(section => (
-          <Link
-            color="inherit"
-            noWrap
-            key={section.title}
-            variant="body2"
-            href={section.url}
-            className={classes.toolbarLink}
-          >
-            {section.title} 
-          </Link>
-        ))
-        }
-      </Toolbar>      
+     
         {this.state.loading ? !this.state.daiBal ? 
           <div align="center"><p>Insufficient Dai balance! Swap 0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa (DAI) at uniswap. <br /> OR just send some ETH to <strong>dai.inotime.eth</strong> to instantly recieve the right DAI token!</p></div> :
           <div align='center'><Loader type="ThreeDots" color="#00BFFF" height={150} width={150} /></div> : 
           !this.state.isSubscribed ? 
-          <div align="center"><br />Please <Button variant='outlined' onClick={()=> this.subscribe()}>Subscribe</Button> :(</div>  :
-        <main>
-          <MainFeaturedPost post={mainFeaturedPost} />
-          <Grid container spacing={4}>
-            {featuredPosts.map((post) => (
-              <FeaturedPost key={post.title} post={post} />
-            ))}
-          </Grid>
-          <Grid container spacing={5} className={classes.mainGrid}>
-           <Content />
-          </Grid>
-        </main> }
+          <div align="center"><br />Please <Button variant='outlined' onClick={()=> this.subscribe()}>Subscribe</Button> :( </div>  :
+            <Switch>
+              <Route path='/post/:id' component={Post} />
+              <Route path='/' component={Main} />
+            </Switch>
+      }
       </Container>
       <Footer />
       <div id='form'>  
@@ -329,45 +300,4 @@ class Blog extends React.Component{
 }
 
 export default withStyles(styles)(Blog);
-
-const sections = [
-  { title: 'Technology', url: '#' },
-  { title: 'Design', url: '#' },
-  { title: 'Culture', url: '#' },
-  { title: 'Business', url: '#' },
-  { title: 'Politics', url: '#' },
-  { title: 'Opinion', url: '#' },
-  { title: 'Science', url: '#' },
-  { title: 'Health', url: '#' },
-  { title: 'Style', url: '#' },
-  { title: 'Travel', url: '#' },
-];
-
-const mainFeaturedPost = {
-  title: 'Title of a longer featured blog post',
-  description:
-    "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
-  image: 'https://source.unsplash.com/random',
-  imgText: 'main image description',
-  linkText: 'Continue reading…',
-};
-
-const featuredPosts = [
-  {
-    title: 'Featured post',
-    date: 'Nov 12',
-    description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
-    image: 'https://source.unsplash.com/random',
-    imageText: 'Image Text',
-  },
-  {
-    title: 'Post title',
-    date: 'Nov 11',
-    description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
-    image: 'https://source.unsplash.com/random',
-    imageText: 'Image Text',
-  },
-];
 

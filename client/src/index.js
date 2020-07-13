@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Blog from './Blog';
 import * as serviceWorker from './serviceWorker';
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
-  <React.StrictMode>
+  <BrowserRouter>
     <Blog />
-  </React.StrictMode>,
+  </BrowserRouter>,
   document.getElementById('root')
 );
 
