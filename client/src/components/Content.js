@@ -59,7 +59,7 @@ export default class Content extends Component {
 			            <Typography variant='h3' align='center'> {post.title} </Typography>
 			            <Typography align='center'> By - {post.by} </Typography> <br />
 				        <Typography paragraph='true'> 
-				        	{post.content.slice(0, 970)}... <Link to={'post/' + post.id}>Continue Reading</Link>
+				        	{post.content.slice(0, 970)}... <Link to={'post/' + post.id} style={{ textDecoration: 'none' }}>Continue Reading</Link>
 				        </Typography>
 		        	</div>
 	        );

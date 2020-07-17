@@ -211,7 +211,7 @@ class Blog extends React.Component{
           noWrap
           className={classes.toolbarTitle}
         >
-          Blog
+          Blog Compounded
         </Typography>
         <Button variant="outlined" size="small" onClick={()=>{
             let add = window.prompt('What is the address of the user?');

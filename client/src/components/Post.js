@@ -4,7 +4,7 @@ import axios from 'axios'
 import { dbURL } from '../Config'
 import Loader from 'react-loader-spinner';
 import {Link} from 'react-router-dom';
-
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 
 const styles = theme => ({
 	mainGrid: {
@@ -17,10 +17,10 @@ const styles = theme => ({
 class Post extends Component {
 
 	async componentWillMount() {
-		console.log('MATCHHHH ', this.props.match)
 		let res = await axios.get(dbURL + '/' + this.props.match.params.id);
 		console.log('post fetched! ')
 		this.setState({loading: false, by: res.data.by, title: res.data.title, content: res.data.content})
+		console.log('PROPSSS ', this.props)
 
 	}
 
@@ -41,11 +41,11 @@ class Post extends Component {
 		return (
 			<Grid container spacing={5} className={classes.mainGrid}>
 				<Container variant="h6">
-					<Typography><Link to='/'>Back</Link></Typography> <br />
+					<Link to='/' ><KeyboardBackspaceIcon /></Link> <br />
 					{
 						this.state.loading ? 
 						<div align='center'>
-							<Loader type="ThreeDots" color="#00BFFF" height={150} width={150} />
+							<Loader type="MutatingDots" color="#00BFFF" height={180} width={180} />
 						</div> :
 						<div> 
 				            <Typography variant='h3' align='center'> {title} </Typography>
