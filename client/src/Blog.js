@@ -137,7 +137,10 @@ class Blog extends React.Component{
   }
 
   async newArticle(title, content) {
-    if(!title || !content) return;
+    if(!title || !content || !this.state.account) {
+      window.alert('Empty field(s) entered!')
+      return
+    }
     const res = await axios.post(
         dbURL,
         {
